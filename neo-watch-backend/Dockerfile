@@ -35,9 +35,10 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/drizzle.config.ts ./
+COPY --from=builder /app/entrypoint.sh ./
 
-# Set ownership
-RUN chown -R elysiajs:nodejs /app
+# Make entrypoint executable and set ownership
+RUN chmod +x /app/entrypoint.sh && chown -R elysiajs:nodejs /app
 
 USER elysiajs
 
@@ -45,8 +46,8 @@ EXPOSE 4000
 ENV PORT=4000
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:4000/health || exit 1
 
-CMD ["bun", "run", "src/index.ts"]
+CMD ["/app/entrypoint.sh"]
 # }}}
