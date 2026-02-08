@@ -54,8 +54,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       NASA_API_KEY: ${NASA_API_KEY:-DEMO_KEY}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
-    expose:
-      - "4000"
+    ports:
+      - "4000:4000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -78,8 +78,8 @@ services:
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://backend:4000}
       NODE_ENV: production
-    expose:
-      - "3000"
+    ports:
+      - "3005:3000"
     depends_on:
       - backend
     restart: always
